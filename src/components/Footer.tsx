@@ -1,13 +1,19 @@
 import { salon } from '../data/salon'
 import { mailHref, telHref, waHref } from '../lib/contact'
-import logoUrl from '../assets/img/sz-logo.png'
+import markUrl from '../assets/img/sz-mark.png'
 
 export function Footer() {
   const a = salon.address
   return (
     <footer className="footer">
-      <div className="wrap footer__layout">
-        <img className="footer__logo" src={logoUrl} alt="Sam Zenaldeen Gentlemen’s Grooming" width={200} height={167} loading="lazy" />
+      <div className="footer__inner">
+        <p className="footer__name">
+          <img src={markUrl} alt="" width={44} height={44} loading="lazy" />
+          <span>
+            Sam Zenaldeen
+            <em>Gentlemen’s Grooming</em>
+          </span>
+        </p>
         <address className="footer__address">
           {a.street}
           <br />
@@ -27,8 +33,10 @@ export function Footer() {
           </li>
         </ul>
       </div>
-      <div className="wrap footer__base">
-        <span>© {new Date().getFullYear()} {salon.fullName}</span>
+      <div className="footer__base">
+        <span>
+          © {new Date().getFullYear()} {salon.fullName}
+        </span>
         <span>Site by AlexWilder-Dev</span>
       </div>
     </footer>

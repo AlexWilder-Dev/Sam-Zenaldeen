@@ -2,7 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, claude/epic-feynman-2uvkub]
+    # The demo lives on a single working branch, so any pushed branch deploys
+    branches: ['**']
   workflow_dispatch:
 
 permissions:

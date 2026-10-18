@@ -131,25 +131,22 @@ Google Maps (read 18 Oct 2026), Fresha and VisitRichmond all agree:
 
 ## Design reasoning
 
-- **Palette:** taken from the logo and the shopfront (bottle green #003426, which I've deepened slightly to #062A20 for large areas, plus gold #BE9F4A) and from the room (red leather #8E2A30 as a rare accent for live states, walnut #6B4130 for frames and rules, and a warm panelled-wall off-white #F3EFE7 for reading surfaces).
-- **Type:** the SZ monogram is a high-contrast Didone serif, so headings use **Bodoni Moda**. The wordmark is thin, tracked capitals, so labels and text use **Jost**, a geometric sans that echoes that lettering better than Arimo. Prices are in Bodoni with lining figures, like a printed tariff.
-- **Layout:** the first screen *is* the shopfront. A green fascia carries the gold mark and wordmark, with the phone number painted left and the web address right, exactly as on Sheen Lane. Beneath it, the "window" answers the three questions: open now or not (live, Europe/London time), what a cut costs (£33), and how to book (request a time, call, WhatsApp).
-- **Photos** sit in walnut frames like the mirrors. The interior panorama is the window display, and the shopfront photo leads "Getting there".
-- **Icons:** their cut-throat razor and scissors redrawn as fine gold line SVGs. I left out the barber pole and moustache, because they are clichés, and the shopfront doesn't use them either.
-- **Signature 1, looking round the room:** the owner's panorama is the first thing you see, swiped sideways with the finger, with named points on what the photo shows. Native scrolling keeps it fast and reliable on phones.
-- **Signature 2, the ticket:** the visit builder as a paper ticket. Package, Father & Son and five-visit matches are worked out from list prices, and a "Saved £x" stamp lands when one applies. It ends in a booking request with a date and a time inside opening hours, then a confirmation, with "or WhatsApp / call Sam" beside it. The WhatsApp link is prefilled with the request, so it works today.
-- **Signature 3, the misted mirror:** their three-step description (hot towel, traditional shave, facial massage) beside a walnut mirror like theirs. It mists over when it comes into view, a razor clears one line to show the price, and it can be wiped by hand. Reviewers single out the hot towels (6 reviews).
-- An earlier cut used scroll-driven sequences (opening the door, panning the room). They were cut because they made the page slow and long on phones.
-- **Reviews:** not a carousel. A short ledger of real Google quotes credited by first name and initial, alongside the review-topic counts.
+- **Why it changed.** Earlier cuts used the salon's photos as the main visuals and a "luxury barber" palette (gold, walnut, red leather). Feedback: it read as cheap and templated, and the photos (dated phone shots, a 255 px portrait) dragged it down. This version is built from ink, paper and type, with the room drawn instead of photographed.
+- **Palette:** bone paper #EEEAE2, ink #141311, a warm grey #6D675F for secondary text, and Sam's own bottle green **#003426** (the shopfront fascia and logo square) used sparingly: the booking buttons, the "open now" light, chosen services, savings, today's hours and the footer. The fascia in the shopfront drawing is the only large green area on the page apart from the footer. No gold, no red, no walnut.
+- **Type:** **Instrument Serif** for headlines and prices (tall, narrow, editorial; prices read like a printed tariff), **Instrument Sans** for everything else. Section heads are numbered like an index (01 Price list, 02 The hot towel shave…) on a hairline rule.
+- **Layout:** asymmetric and editorial rather than centred cards: a huge headline in their own words ("Sharp and dapper", from Sam's story), a narrow column beside it that answers the three questions (open now, £33, book), then the room drawn edge to edge. Hairlines, not boxes.
+- **Signature 1, the room in ink:** the salon drawn as an elevation from the owner's panorama: five walnut-framed mirrors with their lamps, ribbed basins, barber chairs, pendant lamps on twisted flex, the door to the back, the coat stand, the reception counter with flowers and rolled hot towels, the buttoned bench. The lamps are lit while the salon is open (London time) and off when it's shut. The chairs, basins, towels and bench can be pressed to see and add their service (Wash Cut & Finish, Wash & Blow-Dry, the Luxury shave, Father & Son). Swipe sideways on a phone.
+- **Signature 2, your visit:** tap prices and the visit adds up. When the choice matches a package, Father & Son or a five-visit bundle, it offers the switch, worked out from list prices, and shows a green "Saved £x". It ends in a booking request with a day and time inside opening hours, then a confirmation with a prefilled WhatsApp message.
+- **Signature 3, the misted mirror:** their three-step description beside a mirror that reflects one of the drawn stations. It mists over when it comes into view, a razor clears one line, and you can wipe the glass.
+- **Find us:** the shopfront drawn in ink with its green fascia, lit or dark with the opening hours, beside the hours, contacts and a to-scale sketch of Sheen Lane from Mortlake station.
+- **Reviews:** not a carousel. The 4.8 set huge, Google's review topics as a ledger with counts, and two credited quotes.
 
 ## Photos on the demo
 
-- Shopfront hero, left window: the owner's panorama (g3), showing the mirrors and chairs. Right window (desktop): the same panorama, showing Sam, the counter and the red bench. This matches what the real windows show from the street.
-- Team section: the chair by the window (g1), in a walnut "mirror" frame.
-- Sam's story: Sam's portrait from the current site, in a walnut frame.
-- Find us: the shopfront at dusk (g5).
-- Link preview (public/og.jpg): the logo mark and wordmark laid out like the fascia, above the panorama.
-- Not used: all of the current site's stock banners, the busy Halloween corner (g2), and the customer photos (not kept).
+- Only one photo is left: Sam's portrait from the current site, shown small and in black and white, at no more than its native 255 px width.
+- The room (hero, mirror reflection, team section) and the shopfront are SVG drawings made from the owner's panorama (g3), the chair photo (g1) and the shopfront at dusk (g5).
+- Link preview (public/og.jpg): the SZ mark and the name in Instrument Serif above the drawing of the room.
+- Not used: the current site's stock banners, the busy Halloween corner (g2), and the customer photos (not kept).
 
 ## Unknowns, left out of the site
 

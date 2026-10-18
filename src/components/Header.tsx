@@ -1,24 +1,29 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, m } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { salon } from '../data/salon'
-import { scrollToId, scrollToTop, telHref } from '../lib/contact'
-import { Close, Menu, Phone } from './Icons'
+import { scrollToId, scrollToTop } from '../lib/contact'
+import { Close, Menu } from './Icons'
 import markUrl from '../assets/img/sz-mark.png'
 
 export const SECTIONS = [
   { id: 'prices', label: 'Prices' },
-  { id: 'shave', label: 'Hot towel shave' },
+  { id: 'shave', label: 'The shave' },
   { id: 'packages', label: 'Packages' },
-  { id: 'sam', label: 'Sam’s story' },
-  { id: 'reviews', label: 'Reviews' },
+  { id: 'sam', label: 'Sam' },
   { id: 'find', label: 'Find us' },
 ]
 
-/** The fascia, as a slim bar that stays at the top */
 export function Header() {
   const [menu, setMenu] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 8)
+    on()
+    window.addEventListener('scroll', on, { passive: true })
+    return () => window.removeEventListener('scroll', on)
+  }, [])
 
   useEffect(() => {
     if (!menu) return
@@ -33,36 +38,24 @@ export function Header() {
   }
 
   return (
-    <header className="header">
-      <div className="header__bar">
-        <button type="button" className="header__brand" onClick={() => scrollToTop()} aria-label="Sam Zenaldeen Gentlemen’s Grooming, back to top">
-          <img src={markUrl} alt="" width={40} height={40} />
-          <span className="header__name">
-            <span>Sam Zenaldeen</span>
-            <small>Gentlemen’s Grooming</small>
-          </span>
+    <header className={`top${scrolled || menu ? ' is-scrolled' : ''}`}>
+      <div className="top__bar">
+        <button type="button" className="top__brand" onClick={() => scrollToTop()} aria-label="Sam Zenaldeen Gentlemen’s Grooming, back to top">
+          <img src={markUrl} alt="" width={26} height={26} />
+          Sam Zenaldeen
         </button>
-        <nav className="header__nav" aria-label="Sections">
+        <nav className="top__nav" aria-label="Sections">
           {SECTIONS.map((s) => (
             <button key={s.id} type="button" onClick={() => go(s.id)}>
               {s.label}
             </button>
           ))}
         </nav>
-        <a className="header__phone" href={telHref}>
-          <Phone size={16} /> {salon.phone.display}
-        </a>
-        <button type="button" className="btn btn--leather btn--small" onClick={() => navigate('/book')}>
+        <button type="button" className="top__book" onClick={() => navigate('/book')}>
           Book
         </button>
-        <button
-          type="button"
-          className="header__menu"
-          aria-expanded={menu}
-          aria-controls="site-menu"
-          onClick={() => setMenu((v) => !v)}
-        >
-          {menu ? <Close size={22} /> : <Menu size={22} />}
+        <button type="button" className="top__menu" aria-expanded={menu} aria-controls="site-menu" onClick={() => setMenu((v) => !v)}>
+          {menu ? <Close size={20} /> : <Menu size={20} />}
           <span className="visually-hidden">Menu</span>
         </button>
       </div>
@@ -72,15 +65,16 @@ export function Header() {
             id="site-menu"
             className="sheet"
             aria-label="Sections"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
           >
             <ul>
-              {SECTIONS.map((s) => (
+              {SECTIONS.map((s, i) => (
                 <li key={s.id}>
                   <button type="button" onClick={() => go(s.id)}>
+                    <span>{String(i + 1).padStart(2, '0')}</span>
                     {s.label}
                   </button>
                 </li>

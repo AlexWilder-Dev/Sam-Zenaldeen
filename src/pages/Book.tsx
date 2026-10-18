@@ -6,11 +6,10 @@ import { useVisit } from '../lib/VisitContext'
 import { gbp } from '../lib/visit'
 import { formatRange, formatTime, longDate, slotsFor, upcomingDays, type DayOption } from '../lib/time'
 import { useLondonNow } from '../lib/useLondonNow'
-import { telHref, waHref } from '../lib/contact'
-import { scrollToTop } from '../lib/contact'
+import { scrollToTop, telHref, waHref } from '../lib/contact'
 import { ServiceRow } from '../components/ServiceRow'
 import { Ticket } from '../components/Ticket'
-import { StatusLamp } from '../components/StatusLamp'
+import { Live } from '../components/Live'
 import { ArrowLeft, Chat, Check, Phone } from '../components/Icons'
 import markUrl from '../assets/img/sz-mark.png'
 
@@ -91,8 +90,8 @@ export function Book() {
               <Check size={22} />
             </m.span>
           </div>
-          <p className="eyebrow eyebrow--gold">Request ready</p>
-          <h1 className="title title--light">
+          <p className="kicker">Request ready</p>
+          <h1 className="display display--small">
             {longDate(sent.day)}, {formatTime(sent.time)}
           </h1>
           <ul className="confirm__list">
@@ -121,15 +120,15 @@ export function Book() {
           </p>
           <p className="demo-note">Demo: this page doesn’t send anything yet. To book for real, send it on WhatsApp or call.</p>
           <div className="confirm__actions">
-            <a className="btn btn--leather btn--block" href={wa} target="_blank" rel="noopener">
+            <a className="cta" href={wa} target="_blank" rel="noopener">
               <Chat size={18} /> Send it to Sam on WhatsApp
             </a>
-            <a className="btn btn--line btn--block" href={telHref}>
+            <a className="btn-line" href={telHref}>
               <Phone size={18} /> Call {salon.phone.display}
             </a>
             <button
               type="button"
-              className="link-gold"
+              className="link"
               onClick={() => {
                 clear()
                 navigate('/')
@@ -153,9 +152,11 @@ export function Book() {
       </header>
 
       <div className="book__intro">
-        <p className="eyebrow eyebrow--gold">Request a time</p>
-        <h1 className="title title--light">Your chair at 119 Sheen Lane</h1>
-        <StatusLamp />
+        <p className="kicker">Request a time</p>
+        <h1 className="display display--small">
+          Your chair at <em>119 Sheen Lane.</em>
+        </h1>
+        <Live detail />
       </div>
 
       <form className="book__form" onSubmit={submit} noValidate>
@@ -165,7 +166,7 @@ export function Book() {
           </h2>
           <Ticket />
           {tried && ids.length === 0 && <p className="field__error">Choose at least one service.</p>}
-          <button type="button" className="link-gold" aria-expanded={picking} onClick={() => setPicking((p) => !p)}>
+          <button type="button" className="link" aria-expanded={picking} onClick={() => setPicking((p) => !p)}>
             {picking ? 'Done choosing' : ids.length ? 'Add or change services' : 'Choose services'}
           </button>
           <AnimatePresence initial={false}>
@@ -174,7 +175,7 @@ export function Book() {
                 {categories.map((c) => (
                   <div key={c.id} className="picker__group">
                     <h3>{c.title}</h3>
-                    <ul className="rows rows--dark">
+                    <ul className="rows">
                       {services
                         .filter((s) => s.category === c.id)
                         .map((s) => (
@@ -277,7 +278,7 @@ export function Book() {
         </AnimatePresence>
 
         <div className="book__submit">
-          <button type="submit" className="btn btn--leather btn--block" aria-disabled={!ready}>
+          <button type="submit" className="cta" aria-disabled={!ready}>
             Send request
           </button>
           <p className="book__or">

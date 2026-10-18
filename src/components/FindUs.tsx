@@ -1,11 +1,11 @@
 import { m } from 'framer-motion'
 import { hours, salon } from '../data/salon'
-import { formatRange } from '../lib/time'
+import { formatRange, statusAt } from '../lib/time'
 import { useLondonNow } from '../lib/useLondonNow'
 import { mailHref, telHref, waHref } from '../lib/contact'
-import { StatusLamp } from './StatusLamp'
-import { Arrow, Chat, Mail, Phone, Wheelchair } from './Icons'
-import shopfront from '../assets/img/shopfront-640.webp'
+import { Live } from './Live'
+import { ShopfrontDrawing } from './ShopfrontDrawing'
+import { Arrow } from './Icons'
 
 /* Sheen Lane, drawn to scale between Mortlake station and Upper Richmond Road West */
 function LaneMap() {
@@ -79,19 +79,29 @@ function LaneMap() {
 
 export function FindUs() {
   const now = useLondonNow()
+  const open = statusAt(now).open
   const a = salon.address
   return (
-    <section id="find" className="section section--wall find" aria-labelledby="find-title">
-      <div className="wrap find__layout">
+    <section id="find" className="block find" aria-labelledby="find-title">
+      <div className="idx">
+        <span>06</span>
+        <span>Find us</span>
+      </div>
+      <h2 id="find-title" className="display find__title">
+        {a.street}
+        <em>
+          {a.area}, {a.postcode}
+        </em>
+      </h2>
+
+      <div className="find__grid">
+        <figure className="find__front">
+          <ShopfrontDrawing lit={open} />
+          <figcaption>Look for the green fascia and the SZ sign{open ? ', and the lights on' : ''}.</figcaption>
+        </figure>
+
         <div className="find__hours">
-          <p className="eyebrow">Find us</p>
-          <h2 id="find-title" className="title">
-            {a.street}
-            <span className="title__sub">
-              {a.area}, {a.city} {a.postcode}
-            </span>
-          </h2>
-          <StatusLamp />
+          <Live detail />
           <table className="hours">
             <caption className="visually-hidden">Opening hours</caption>
             <tbody>
@@ -106,51 +116,34 @@ export function FindUs() {
               ))}
             </tbody>
           </table>
-          <ul className="contact-list">
+          <ul className="contact">
             <li>
-              <a href={telHref}>
-                <Phone size={20} /> <span>Call</span> <strong>{salon.phone.display}</strong>
-              </a>
+              <span>Call</span>
+              <a href={telHref}>{salon.phone.display}</a>
             </li>
             <li>
+              <span>WhatsApp</span>
               <a href={waHref()} target="_blank" rel="noopener">
-                <Chat size={20} /> <span>WhatsApp</span> <strong>{salon.whatsapp.display}</strong>
+                {salon.whatsapp.display}
               </a>
             </li>
             <li>
-              <a href={mailHref}>
-                <Mail size={20} /> <span>Email</span> <strong>{salon.email}</strong>
-              </a>
+              <span>Email</span>
+              <a href={mailHref}>{salon.email}</a>
             </li>
           </ul>
         </div>
 
-        <div className="find__where">
-          <figure className="frontframe">
-            <img
-              src={shopfront}
-              alt="The shopfront at dusk: a dark green front with the gold SZ sign, the phone number and web address painted on the fascia, and the lit salon through two windows"
-              width={640}
-              height={854}
-              loading="lazy"
-            />
-            <figcaption>Look for the green shopfront and the gold SZ sign.</figcaption>
-          </figure>
-          <div className="find__map">
-            <LaneMap />
-            <p>
-              On Sheen Lane, between Upper Richmond Road West and Mortlake station: about {salon.nearby.station.metres} m
-              from the station.
-            </p>
-            {salon.accessibleEntrance && (
-              <p className="find__access">
-                <Wheelchair size={20} /> Wheelchair-accessible entrance
-              </p>
-            )}
-            <a className="btn btn--green" href={salon.links.directions} target="_blank" rel="noopener">
-              Directions in Google Maps <Arrow size={18} />
-            </a>
-          </div>
+        <div className="find__map">
+          <LaneMap />
+          <p>
+            On Sheen Lane, between Upper Richmond Road West and Mortlake station: about {salon.nearby.station.metres} m
+            from the station.
+            {salon.accessibleEntrance && ' Wheelchair-accessible entrance.'}
+          </p>
+          <a className="btn-line" href={salon.links.directions} target="_blank" rel="noopener">
+            Directions in Google Maps <Arrow size={18} />
+          </a>
         </div>
       </div>
     </section>

@@ -1,157 +1,163 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { AnimatePresence, m } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { reviews, salon, serviceById } from '../data/salon'
-import { telHref, waHref } from '../lib/contact'
-import { StatusLamp } from './StatusLamp'
-import { Chat, Phone, Star } from './Icons'
-import interior1600 from '../assets/img/interior-1600.webp'
+import { scrollToId, telHref, waHref } from '../lib/contact'
+import { statusAt, formatTime, hoursFor } from '../lib/time'
+import { useLondonNow } from '../lib/useLondonNow'
+import { useVisit } from '../lib/VisitContext'
+import { gbp } from '../lib/visit'
+import { RoomDrawing, type Pick } from './RoomDrawing'
+import { Live } from './Live'
+import { Arrow, Check, Close, Plus } from './Icons'
 
-/* Points in the owner's panorama, as fractions of its width and height */
-const SPOTS = [
-  { x: 0.1, y: 0.22, label: 'Walnut mirrors, brass lamps' },
-  { x: 0.21, y: 0.62, label: 'A basin at every station' },
-  { x: 0.43, y: 0.69, label: 'Red leather chairs' },
-  { x: 0.71, y: 0.44, label: 'Sam' },
-  { x: 0.925, y: 0.7, label: 'The red bench' },
-]
+/* What each part of the room offers */
+const PICKS: Record<Pick, { id: string; note: string }> = {
+  cut: { id: 'wash-cut-finish', note: 'Every appointment begins with a consultation.' },
+  wash: { id: 'wash-blow-dry', note: '' },
+  shave: { id: 'luxury-shave', note: 'A hot towel, a traditional shave, facial massage.' },
+  family: { id: 'father-and-son', note: 'Son under 18 years.' },
+}
 
-/** The room, swiped sideways with the finger like looking round from the doorway */
-function Room() {
+function PickCard({ kind, at, onClose }: { kind: Pick; at: { x: number; y: number; flip: boolean }; onClose: () => void }) {
+  const { has, toggle } = useVisit()
+  const s = serviceById(PICKS[kind].id)!
+  const on = has(s.id)
+  return (
+    <m.div
+      className={`pick${at.flip ? ' pick--flip' : ''}`}
+      style={{ left: at.x, top: at.y }}
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 6 }}
+      transition={{ duration: 0.18 }}
+      role="dialog"
+      aria-label={s.name}
+    >
+      <button type="button" className="pick__close" onClick={onClose} aria-label="Close">
+        <Close size={14} />
+      </button>
+      <p className="pick__name">{s.name}</p>
+      <p className="pick__price">{gbp(s.price)}</p>
+      {PICKS[kind].note && <p className="pick__note">{PICKS[kind].note}</p>}
+      <div className="pick__actions">
+        <button type="button" className={`pick__add${on ? ' is-on' : ''}`} onClick={() => toggle(s.id)} aria-pressed={on}>
+          {on ? <Check size={15} /> : <Plus size={15} />} {on ? 'In your visit' : 'Add to visit'}
+        </button>
+        <button type="button" className="pick__more" onClick={() => scrollToId('prices')}>
+          All prices
+        </button>
+      </div>
+    </m.div>
+  )
+}
+
+function Room({ lit }: { lit: boolean }) {
+  const box = useRef<HTMLDivElement>(null)
   const strip = useRef<HTMLDivElement>(null)
-  const [active, setActive] = useState(-1)
+  const [pick, setPick] = useState<{ kind: Pick; x: number; y: number; flip: boolean } | null>(null)
   const [moved, setMoved] = useState(false)
+
+  const onPick = useCallback((kind: Pick, el: Element) => {
+    const b = box.current
+    if (!b) return
+    const r = el.getBoundingClientRect()
+    const o = b.getBoundingClientRect()
+    const x = Math.min(Math.max(r.left + r.width / 2 - o.left, 120), o.width - 120)
+    // Above the thing pressed, unless that would run under the header
+    const flip = r.top < 300
+    setPick({ kind, x, y: flip ? r.bottom - o.top + 10 : r.top - o.top - 10, flip })
+  }, [])
+
+  useEffect(() => {
+    if (!pick) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setPick(null)
+    const onDown = (e: PointerEvent) => {
+      if (!(e.target as Element).closest('.pick, .target')) setPick(null)
+    }
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('pointerdown', onDown)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('pointerdown', onDown)
+    }
+  }, [pick])
 
   useEffect(() => {
     const el = strip.current
     if (!el) return
-    let raf = 0
-    const read = () => {
-      cancelAnimationFrame(raf)
-      raf = requestAnimationFrame(() => {
-        const w = el.scrollWidth
-        // Only pick a spot by position when the room is wider than the screen
-        if (w <= el.clientWidth + 2) return
-        const centre = el.scrollLeft + el.clientWidth / 2
-        let best = 0
-        let bestD = Infinity
-        SPOTS.forEach((s, i) => {
-          const d = Math.abs(s.x * w - centre)
-          if (d < bestD) {
-            best = i
-            bestD = d
-          }
-        })
-        setActive(best)
-        if (el.scrollLeft > 12) setMoved(true)
-      })
+    const on = () => {
+      if (el.scrollLeft > 12) setMoved(true)
+      setPick(null)
     }
-    read()
-    el.addEventListener('scroll', read, { passive: true })
-    window.addEventListener('resize', read)
-    return () => {
-      cancelAnimationFrame(raf)
-      el.removeEventListener('scroll', read)
-      window.removeEventListener('resize', read)
-    }
+    el.addEventListener('scroll', on, { passive: true })
+    return () => el.removeEventListener('scroll', on)
   }, [])
 
-  const show = (i: number) => {
-    const el = strip.current
-    if (!el) return
-    setActive(i)
-    if (el.scrollWidth > el.clientWidth + 2) {
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      el.scrollTo({ left: SPOTS[i].x * el.scrollWidth - el.clientWidth / 2, behavior: reduce ? 'auto' : 'smooth' })
-    }
-  }
-
   return (
-    <div className="room">
-      <div
-        className="room__strip"
-        ref={strip}
-        tabIndex={0}
-        role="region"
-        aria-label="Panorama of the salon. Scroll sideways to look around."
-      >
-        <div className="room__pano">
-          <img
-            src={interior1600}
-            alt="Inside the salon: walnut-framed mirrors with brass lamps and white basins along one wall, red leather barber chairs, and Sam at the counter beside the red buttoned bench"
-            width={1600}
-            height={681}
-            fetchPriority="high"
-          />
-          {SPOTS.map((s, i) => (
-            <button
-              key={s.label}
-              type="button"
-              className={`spot${i === active ? ' is-active' : ''}${s.x < 0.15 ? ' spot--start' : s.x > 0.85 ? ' spot--end' : ''}`}
-              style={{ left: `${s.x * 100}%`, top: `${s.y * 100}%` }}
-              onClick={() => show(i)}
-              onMouseEnter={() => setActive(i)}
-              onFocus={() => setActive(i)}
-            >
-              <span className="spot__dot" aria-hidden />
-              <span className="spot__label">{s.label}</span>
-            </button>
-          ))}
+    <div className="room" ref={box}>
+      <div className="room__strip" ref={strip} tabIndex={-1}>
+        <div className="room__canvas">
+          <RoomDrawing lit={lit} onPick={onPick} />
         </div>
       </div>
-      <p className={`room__swipe${moved ? ' is-gone' : ''}`} aria-hidden>
+      <p className={`room__swipe${moved || pick ? ' is-gone' : ''}`} aria-hidden>
         Swipe to look round
       </p>
+      <AnimatePresence>
+        {pick && <PickCard key={pick.kind + pick.x} kind={pick.kind} at={pick} onClose={() => setPick(null)} />}
+      </AnimatePresence>
     </div>
   )
 }
 
 export function Hero() {
   const navigate = useNavigate()
+  const now = useLondonNow()
+  const s = statusAt(now)
+  const today = hoursFor(now.day)
   const cut = serviceById('wash-cut-finish')!
-  const teen = serviceById('teen-wash-cut-finish')!
-  const clipper = serviceById('clipper-one-grade')!
-  const express = serviceById('express-shave')!
+  const lights = s.open ? `Lights on until ${formatTime(today.close)}` : s.headline.replace('Closed, ', 'Lights off. ').replace('opens', 'On at')
 
   return (
     <section className="hero" aria-label="Open now, prices and booking">
-      <div className="hero__frame">
-        <Room />
+      <div className="hero__grid">
         <h1 className="hero__title">
-          Leave sharp
+          Sharp <em>and</em>
           <br />
-          <em>and dapper.</em>
+          dapper.
         </h1>
+        <div className="hero__side">
+          <Live />
+          <div className="hero__price">
+            <span>{cut.name}</span>
+            <strong>{gbp(cut.price)}</strong>
+          </div>
+          <button type="button" className="cta" onClick={() => navigate('/book')}>
+            Book a time <Arrow size={18} />
+          </button>
+          <p className="hero__links">
+            <a href={telHref}>Call {salon.phone.display}</a>
+            <a href={waHref()} target="_blank" rel="noopener">
+              WhatsApp
+            </a>
+          </p>
+        </div>
+        <p className="hero__meta">
+          <span>Gentlemen’s grooming</span>
+          <span>119 Sheen Lane, SW14</span>
+        </p>
       </div>
 
-      <div className="hero__info">
-        <StatusLamp />
-        <div className="hero__price">
-          <span>{cut.name}</span>
-          <strong>£{cut.price}</strong>
-        </div>
-        <p className="hero__others">
-          Teen £{teen.price} · Clipper all over £{clipper.price} · Hot towel shave from £{express.price}
-        </p>
-        <div className="hero__actions">
-          <button className="btn btn--leather btn--block" onClick={() => navigate('/book')}>
-            Request a time
-          </button>
-          <a className="btn btn--line" href={telHref}>
-            <Phone size={18} /> Call
-          </a>
-          <a className="btn btn--line" href={waHref()} target="_blank" rel="noopener">
-            <Chat size={18} /> WhatsApp
-          </a>
-        </div>
-        <a className="hero__rating" href={salon.links.reviews} target="_blank" rel="noopener">
-          <span className="stars" aria-hidden>
-            {Array.from({ length: 5 }, (_, i) => (
-              <Star key={i} size={13} />
-            ))}
-          </span>
-          {reviews.rating} on Google from {reviews.count} reviews
-        </a>
-      </div>
+      <Room lit={s.open} />
+      <p className="hero__caption">
+        <span>
+          The salon at 119 Sheen Lane. <em>{lights}.</em>
+        </span>
+        <span>
+          Tap a chair, a basin, the towels or the bench · {reviews.rating} on Google from {reviews.count} reviews
+        </span>
+      </p>
     </section>
   )
 }

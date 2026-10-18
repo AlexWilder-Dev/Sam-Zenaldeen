@@ -6,32 +6,13 @@ import { gbp, offerLine, type Offer } from '../lib/visit'
 import { Ticket, useSaved } from './Ticket'
 import { Arrow, Close } from './Icons'
 
-/** Full-width suggestion, used on the booking page */
-export function OfferCard({ offer, onTake }: { offer: Offer; onTake: () => void }) {
-  return (
-    <m.div
-      className="offer"
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 8 }}
-      transition={{ duration: 0.25 }}
-      role="status"
-    >
-      <p className="offer__text">{offerLine(offer)}</p>
-      <button type="button" className="offer__take" onClick={onTake}>
-        {offer.kind === 'bundle' ? 'Make it five' : 'Switch to the package'} · save {gbp(offer.saving)}
-      </button>
-    </m.div>
-  )
-}
-
 function offerShort(o: Offer) {
-  if (o.pkg.id === 'father-and-son') return `Father & Son: ${gbp(o.pkg.price)}`
+  if (o.pkg.id === 'father-and-son') return `As Father & Son: ${gbp(o.pkg.price)}`
   if (o.kind === 'bundle') return `Five visits: ${gbp(o.pkg.price)}`
   return `As a package: ${gbp(o.pkg.price)}`
 }
 
-/** The ticket, folded down to a bar at the bottom of the screen */
+/** The visit, folded down to a bar at the bottom of the screen */
 export function VisitTray() {
   const { ids, total, hasFrom, offer, take } = useVisit()
   const saved = useSaved(ids)
@@ -45,6 +26,13 @@ export function VisitTray() {
     return () => document.body.removeAttribute('data-tray')
   }, [n])
 
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
   return (
     <>
       <AnimatePresence>
@@ -53,15 +41,15 @@ export function VisitTray() {
             <m.div
               className="ticket-sheet"
               role="dialog"
-              aria-label="Your ticket"
+              aria-label="Your visit"
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
-              transition={{ type: 'spring', stiffness: 360, damping: 36 }}
+              transition={{ type: 'spring', stiffness: 360, damping: 38 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <button type="button" className="ticket-sheet__close" onClick={() => setOpen(false)} aria-label="Close ticket">
-                <Close size={20} />
+              <button type="button" className="ticket-sheet__close" onClick={() => setOpen(false)} aria-label="Close">
+                <Close size={18} />
               </button>
               <Ticket onBook={() => navigate('/book')} />
             </m.div>
@@ -77,25 +65,25 @@ export function VisitTray() {
             initial={{ y: '120%' }}
             animate={{ y: 0 }}
             exit={{ y: '120%' }}
-            transition={{ type: 'spring', stiffness: 380, damping: 36 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 38 }}
           >
             <AnimatePresence initial={false}>
               {offer && (
                 <m.div
                   key={offer.pkg.id}
-                  className={`offer offer--strip${offer.kind === 'bundle' ? ' offer--quiet' : ''}`}
+                  className={`tray__offer${offer.kind === 'bundle' ? ' tray__offer--quiet' : ''}`}
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   role="status"
                 >
-                  <p className="offer__text" title={offerLine(offer)}>
+                  <p title={offerLine(offer)}>
                     <span aria-hidden>
-                      {offerShort(offer)} <em>save {gbp(offer.saving)}</em>
+                      {offerShort(offer)}, <em>save {gbp(offer.saving)}</em>
                     </span>
                     <span className="visually-hidden">{offerLine(offer)}</span>
                   </p>
-                  <button type="button" className="offer__take" onClick={() => take(offer)}>
+                  <button type="button" onClick={() => take(offer)}>
                     {offer.kind === 'bundle' ? 'Make it five' : 'Switch'}
                   </button>
                 </m.div>
@@ -105,14 +93,14 @@ export function VisitTray() {
               <button type="button" className="tray__summary" onClick={() => setOpen(true)}>
                 <span className="tray__count">
                   {n} {n === 1 ? 'service' : 'services'}
-                  <small>{saved > 0 ? `Saved ${gbp(saved)} · ticket` : 'See ticket'}</small>
+                  <small>{saved > 0 ? `Saved ${gbp(saved)}` : 'See your visit'}</small>
                 </span>
                 <m.span key={total} className="tray__total" initial={{ y: -6, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
                   {hasFrom && <small>from </small>}
                   {gbp(total)}
                 </m.span>
               </button>
-              <button type="button" className="btn btn--leather tray__go" onClick={() => navigate('/book')}>
+              <button type="button" className="cta tray__go" onClick={() => navigate('/book')}>
                 Choose a time <Arrow size={18} />
               </button>
             </div>

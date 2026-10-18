@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { serviceById } from '../data/salon'
 import { gbp, listPriceOf, savingOf } from '../lib/visit'
-import { useVisit } from '../lib/VisitContext'
-import { Check, Plus } from './Icons'
-import interior960 from '../assets/img/interior-960.webp'
+import { RoomDrawing } from './RoomDrawing'
+import { ServiceRow } from './ServiceRow'
 
 // Their own description of the hot towel shave: "a hot towel, followed by a
 // traditional shave followed by facial massage"
@@ -30,15 +29,18 @@ function razorAt(t: number) {
   return { x, y, angle: (Math.atan2(dy, dx) * 180) / Math.PI }
 }
 
+/* In the glass: one of the stations, chair and pendant lamp, reversed */
 function Reflection({ price, label }: { price: number; label: string }) {
   return (
-    <>
-      <img className="mirror-glass__room" src={interior960} alt="" width={960} height={409} loading="lazy" />
-      <div className="mirror-glass__text">
+    <div className="reflect">
+      <div className="reflect__room">
+        <RoomDrawing lit decorative crop="620 60 480 600" />
+      </div>
+      <p className="reflect__text">
         <span>{label}</span>
         <strong>£{price}</strong>
-      </div>
-    </>
+      </p>
+    </div>
   )
 }
 
@@ -55,7 +57,7 @@ function droplets() {
     const x = Math.random() * c.width
     const y = Math.random() * c.height
     const r = 0.6 + Math.random() * Math.random() * 4.2
-    g.fillStyle = 'rgba(96, 116, 110, 0.32)'
+    g.fillStyle = 'rgba(70, 66, 60, 0.26)'
     g.beginPath()
     g.ellipse(x + r * 0.25, y + r * 0.35, r, r * 1.08, 0, 0, Math.PI * 2)
     g.fill()
@@ -86,7 +88,7 @@ function Mirror() {
     const rz = razor.current
     if (reduce || !g || !f || !rz) return
 
-    const drops = f.querySelector<HTMLElement>('.mirror-mist__drops')
+    const drops = f.querySelector<HTMLElement>('.mist__drops')
     if (drops) drops.style.backgroundImage = `url(${droplets()})`
 
     const W = 120
@@ -211,100 +213,67 @@ function Mirror() {
   }, [reduce])
 
   return (
-    <figure className="mirror-frame">
-      <span className="mirror-frame__lamp" aria-hidden />
-      <div className="mirror-glass" ref={glass}>
+    <figure className="mirror">
+      <div className="mirror__glass" ref={glass}>
         <Reflection price={luxury.price} label={luxury.name} />
         {!reduce && (
-          <div className="mirror-mist" ref={mist} aria-hidden>
-            <div className="mirror-mist__blur">
+          <div className="mist" ref={mist} aria-hidden>
+            <div className="mist__blur">
               <Reflection price={luxury.price} label={luxury.name} />
             </div>
-            <span className="mirror-mist__haze" />
-            <span className="mirror-mist__drops" />
+            <span className="mist__haze" />
+            <span className="mist__drops" />
           </div>
         )}
-        <svg className="mirror-razor" ref={razor} viewBox="-60 -40 130 60" aria-hidden>
-          <path d="M-4 -6h56l6 8c-22 7-44 7-62 0Z" fill="#eef1ef" stroke="#1b1a18" strokeWidth="1.2" />
-          <path d="M-4 -6 -52 -34" stroke="#2a1d17" strokeWidth="10" strokeLinecap="round" />
-          <circle cx="-4" cy="-6" r="3.2" fill="#be9f4a" />
+        <svg className="mirror__razor" ref={razor} viewBox="-60 -40 130 60" aria-hidden>
+          <path d="M-4 -6h56l6 8c-22 7-44 7-62 0Z" fill="#f6f3ec" stroke="#141311" strokeWidth="1.2" />
+          <path d="M-4 -6 -52 -34" stroke="#141311" strokeWidth="9" strokeLinecap="round" />
+          <circle cx="-4" cy="-6" r="3" fill="#003426" />
         </svg>
-        <p className={`mirror-glass__hint${hint ? ' is-on' : ''}`} aria-hidden>
+        <p className={`mirror__hint${hint ? ' is-on' : ''}`} aria-hidden>
           Wipe the glass
         </p>
       </div>
+      <figcaption>The glass mists while the towel is on. Draw across it.</figcaption>
     </figure>
   )
 }
 
 export function ShaveMirror() {
-  const { has, toggle } = useVisit()
   const luxury = serviceById('luxury-shave')!
   const express = serviceById('express-shave')!
   const five = serviceById('bundle-5-shaves')!
   const withCut = serviceById('pkg-cut-shave')!
 
   return (
-    <section id="shave" className="section shave" aria-labelledby="shave-title">
-      <div className="wrap shave__layout">
+    <section id="shave" className="block shave" aria-labelledby="shave-title">
+      <div className="idx">
+        <span>02</span>
+        <span>The hot towel shave</span>
+      </div>
+      <div className="shave__layout">
         <Mirror />
         <div className="shave__text">
-          <p className="eyebrow eyebrow--gold">The hot towel shave</p>
-          <h2 id="shave-title" className="title title--light">
+          <h2 id="shave-title" className="display">
             Sit back
             <br />
             <em>and relax.</em>
           </h2>
-          <ol className="shave__steps">
+          <ol className="steps">
             {STEPS.map((s) => (
               <li key={s.n}>
                 <span>{s.n}</span>
-                <div>
-                  <strong>{s.title}</strong>
-                  <p>{s.body}</p>
-                </div>
+                <strong>{s.title}</strong>
+                <p>{s.body}</p>
               </li>
             ))}
           </ol>
-          <div className="shave__add">
-            {[luxury, express].map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                className={`chip${has(s.id) ? ' is-on' : ''}`}
-                aria-pressed={has(s.id)}
-                onClick={() => toggle(s.id)}
-              >
-                {has(s.id) ? <Check size={16} /> : <Plus size={16} />}
-                {s.name} £{s.price}
-              </button>
-            ))}
-          </div>
-          <div className="deals">
-            {[
-              { pkg: five, line: `Five Luxury shaves. ${gbp(listPriceOf(five))} as single visits.` },
-              { pkg: withCut, line: `With a Wash Cut & Finish. ${gbp(listPriceOf(withCut))} booked separately.` },
-            ].map(({ pkg, line }) => (
-              <button
-                key={pkg.id}
-                type="button"
-                className={`deal${has(pkg.id) ? ' is-on' : ''}`}
-                aria-pressed={has(pkg.id)}
-                onClick={() => toggle(pkg.id)}
-              >
-                <span className="deal__price">£{pkg.price}</span>
-                <span className="deal__text">
-                  <strong>{pkg.name}</strong>
-                  <span>
-                    {line} <em>Save {gbp(savingOf(pkg))}.</em>
-                  </span>
-                </span>
-                <span className="row__toggle" aria-hidden>
-                  {has(pkg.id) ? <Check size={18} /> : <Plus size={18} />}
-                </span>
-              </button>
-            ))}
-          </div>
+          <ul className="rows">
+            <ServiceRow s={luxury} />
+            <ServiceRow s={express} />
+            <ServiceRow s={withCut} extra={`${gbp(listPriceOf(withCut))} booked separately. Save ${gbp(savingOf(withCut))}.`} />
+            <ServiceRow s={five} extra={`${gbp(listPriceOf(five))} as single visits. Save ${gbp(savingOf(five))}.`} />
+          </ul>
         </div>
       </div>
     </section>

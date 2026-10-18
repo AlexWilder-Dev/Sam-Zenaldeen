@@ -1,8 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import '@fontsource-variable/bodoni-moda'
-import '@fontsource-variable/bodoni-moda/wght-italic.css'
-import '@fontsource-variable/jost'
+import '@fontsource/instrument-serif/400.css'
+import '@fontsource/instrument-serif/400-italic.css'
+import '@fontsource-variable/instrument-sans'
 import './styles/site.css'
 import App from './App'
 

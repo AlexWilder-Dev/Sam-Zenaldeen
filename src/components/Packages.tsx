@@ -1,124 +1,100 @@
-import { m } from 'framer-motion'
-import { reviews, serviceById, services } from '../data/salon'
+import { reviews, serviceById, type Service } from '../data/salon'
 import { gbp, listPriceOf, savingOf } from '../lib/visit'
 import { useVisit } from '../lib/VisitContext'
 import { telHref, waHref } from '../lib/contact'
-import { Check, Crossed, Plus } from './Icons'
+import { Check, Plus } from './Icons'
 
 const lucy = reviews.quotes.find((q) => q.id === 'lucy')!
 
-/** Five visits, marked off one by one */
-function FiveMarks() {
+const GROUPS: { title: string; ids: string[] }[] = [
+  { title: 'In one visit', ids: ['pkg-cut-shave', 'pkg-cut-beard'] },
+  { title: 'Five visits', ids: ['bundle-5-cuts', 'bundle-5-shaves'] },
+  { title: 'Together', ids: ['father-and-son'] },
+]
+
+function covers(p: Service) {
+  return p
+    .covers!.map((c) => {
+      const s = serviceById(c.id)!
+      return c.count > 1 ? `${c.count} × ${s.name}` : s.name
+    })
+    .join(' + ')
+}
+
+function Row({ id }: { id: string }) {
+  const { has, toggle } = useVisit()
+  const p = serviceById(id)!
+  const on = has(p.id)
+  const count = p.covers![0].count
   return (
-    <span className="five" aria-hidden>
-      {Array.from({ length: 5 }, (_, i) => (
-        <m.span
-          key={i}
-          initial={{ scale: 0.3, opacity: 0.25 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ delay: 0.15 + i * 0.12, type: 'spring', stiffness: 500, damping: 20 }}
-        />
-      ))}
-    </span>
+    <li>
+      <button type="button" className={`prow${on ? ' is-on' : ''}`} aria-pressed={on} onClick={() => toggle(p.id)}>
+        <span className="prow__name">
+          {p.id === 'father-and-son' ? 'Father & Son' : p.name}
+          <small>
+            {covers(p)}
+            {count > 1 && <>. {gbp(p.price / count)} a visit</>}
+            {p.note && <>. {p.note}</>}
+          </small>
+        </span>
+        <span className="prow__was">
+          <span className="prow__label">Separately</span>
+          <s>{gbp(listPriceOf(p))}</s>
+        </span>
+        <span className="prow__price">£{p.price}</span>
+        <span className="prow__save">Save {gbp(savingOf(p))}</span>
+        <span className="row__toggle" aria-hidden>
+          {on ? <Check size={15} /> : <Plus size={15} />}
+        </span>
+        <span className="visually-hidden">{on ? ', in your visit' : ', add to your visit'}</span>
+      </button>
+    </li>
   )
 }
 
 export function Packages() {
-  const { has, toggle } = useVisit()
-  const pkgs = services.filter((s) => s.category === 'packages')
-  const combos = pkgs.filter((p) => p.covers!.length > 1)
-  const bundles = pkgs.filter((p) => p.covers!.length === 1)
-  const fatherSon = serviceById('father-and-son')!
-
-  const card = (id: string, five = false) => {
-    const p = serviceById(id)!
-    const on = has(p.id)
-    const perVisit = five ? p.price / p.covers![0].count : undefined
-    return (
-      <m.button
-        key={p.id}
-        type="button"
-        className={`pass${on ? ' is-on' : ''}${five ? ' pass--five' : ''}`}
-        aria-pressed={on}
-        onClick={() => toggle(p.id)}
-        initial={{ opacity: 0, y: 30, rotate: five ? -1.5 : 1 }}
-        whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.7, ease: [0.2, 0.7, 0.2, 1] }}
-      >
-        <span className="pass__name">{p.name}</span>
-        {five && <FiveMarks />}
-        <span className="pass__prices">
-          <s>{gbp(listPriceOf(p))}</s>
-          <span className="pass__price">£{p.price}</span>
-        </span>
-        <span className="pass__save">
-          Save {gbp(savingOf(p))}
-          {perVisit !== undefined && <> · {gbp(perVisit)} a visit</>}
-        </span>
-        <span className="pass__add">
-          {on ? <Check size={18} /> : <Plus size={18} />}
-          {on ? 'On your ticket' : 'Add to ticket'}
-        </span>
-      </m.button>
-    )
-  }
-
   return (
-    <section id="packages" className="section packages" aria-labelledby="packages-title">
-      <div className="wrap">
-        <header className="section__head">
-          <p className="eyebrow">
-            <Crossed size={22} /> Packages
-          </p>
-          <h2 id="packages-title" className="title">
-            The complete
-            <br />
-            <em>experience.</em>
-          </h2>
-          <p className="lede">Every saving below is worked out from the list prices.</p>
-        </header>
+    <section id="packages" className="block packages" aria-labelledby="packages-title">
+      <div className="idx">
+        <span>03</span>
+        <span>Packages</span>
+      </div>
+      <div className="packages__head">
+        <h2 id="packages-title" className="display">
+          The complete <em>experience.</em>
+        </h2>
+        <p className="packages__note">Every saving here is worked out from the list prices above.</p>
+      </div>
 
-        <div className="packages__grid">
-          <div>
-            <h3 className="packages__sub">In one visit</h3>
-            <div className="passes">{combos.map((p) => card(p.id))}</div>
+      <div className="ptable">
+        <p className="ptable__cols" aria-hidden>
+          <span />
+          <span>Separately</span>
+          <span>Package</span>
+          <span>You save</span>
+          <span />
+        </p>
+        {GROUPS.map((g) => (
+          <div key={g.title} className="ptable__group">
+            <h3>{g.title}</h3>
+            <ul>
+              {g.ids.map((id) => (
+                <Row key={id} id={id} />
+              ))}
+            </ul>
           </div>
-          <div>
-            <h3 className="packages__sub">For regulars: five visits</h3>
-            <div className="passes">{bundles.map((p) => card(p.id, true))}</div>
-          </div>
-        </div>
+        ))}
+      </div>
 
-        <aside className="family">
-          <div>
-            <h3 className="family__title">
-              Father &amp; Son <span>£{fatherSon.price}</span>
-            </h3>
-            <p>
-              Son under 18. {gbp(savingOf(fatherSon))} less than a Wash Cut &amp; Finish and a Teen Wash Cut &amp; Finish
-              booked separately.
-            </p>
-            <button
-              type="button"
-              className={`chip${has(fatherSon.id) ? ' is-on' : ''}`}
-              aria-pressed={has(fatherSon.id)}
-              onClick={() => toggle(fatherSon.id)}
-            >
-              {has(fatherSon.id) ? <Check size={16} /> : <Plus size={16} />} Father &amp; Son
-            </button>
-          </div>
-          <figure className="family__quote">
-            <blockquote>“{lucy.text}”</blockquote>
-            <figcaption>
-              {lucy.author}, Google review, {lucy.year}
-            </figcaption>
-          </figure>
-        </aside>
-
+      <div className="packages__foot">
+        <figure className="pull">
+          <blockquote>“{lucy.text}”</blockquote>
+          <figcaption>
+            {lucy.author}, Google review, {lucy.year}
+          </figcaption>
+        </figure>
         <p className="packages__group">
-          Group bookings available. <a href={telHref}>Call</a> or{' '}
+          <strong>Group bookings available.</strong> <a href={telHref}>Call</a> or{' '}
           <a href={waHref('Hello Sam, I’d like to ask about a group booking.')} target="_blank" rel="noopener">
             WhatsApp
           </a>{' '}
