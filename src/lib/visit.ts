@@ -59,3 +59,11 @@ export function findOffer(ids: string[]): Offer | null {
 export function applyOffer(ids: string[], offer: Offer) {
   return [...ids.filter((id) => !offer.replaces.includes(id)), offer.pkg.id]
 }
+
+export function offerLine(o: Offer) {
+  if (o.pkg.id === 'father-and-son')
+    return `Booking for you and your son (under 18)? Father & Son is ${gbp(o.pkg.price)}, not ${gbp(o.listPrice)}.`
+  if (o.kind === 'bundle')
+    return `Coming back regularly? ${o.pkg.name} is ${gbp(o.pkg.price)}, not ${gbp(o.listPrice)} for five single visits.`
+  return `That’s the ${o.pkg.name} package: ${gbp(o.pkg.price)}, not ${gbp(o.listPrice)}.`
+}

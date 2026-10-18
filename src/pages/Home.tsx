@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Fascia, Shopfront } from '../components/Shopfront'
+import { Entrance } from '../components/Entrance'
+import { Manifesto } from '../components/Manifesto'
 import { Tariff } from '../components/Tariff'
-import { ShaveStory } from '../components/ShaveStory'
+import { SteamMirror } from '../components/SteamMirror'
 import { Packages } from '../components/Packages'
 import { SamStory } from '../components/SamStory'
 import { Reviews } from '../components/Reviews'
@@ -10,6 +11,8 @@ import { FindUs } from '../components/FindUs'
 import { Footer } from '../components/Footer'
 import { StickyBar } from '../components/StickyBar'
 import { VisitTray } from '../components/VisitTray'
+import { Intro } from '../components/Intro'
+import { Cursor } from '../components/Cursor'
 import { scrollToId } from '../lib/contact'
 
 export function Home() {
@@ -22,12 +25,14 @@ export function Home() {
 
   return (
     <>
+      <Intro />
+      <Cursor />
       <StickyBar />
-      <Fascia />
       <main>
-        <Shopfront />
+        <Entrance />
+        <Manifesto />
         <Tariff />
-        <ShaveStory />
+        <SteamMirror />
         <Packages />
         <SamStory />
         <Reviews />

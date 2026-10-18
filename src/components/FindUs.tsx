@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { hours, salon } from '../data/salon'
 import { formatRange } from '../lib/time'
 import { useLondonNow } from '../lib/useLondonNow'
@@ -36,11 +37,35 @@ function LaneMap() {
       <path d={`M128 ${top + 10}V${shopY - 12}M128 ${shopY + 12}V${bottom - 10}`} className="lane__measure" />
       <text x="120" y={(top + shopY) / 2 + 40} className="lane__dist" textAnchor="end">{station.metres} m</text>
       <text x="120" y={(shopY + bottom) / 2 + 4} className="lane__dist" textAnchor="end">{junction.metres} m</text>
+      {/* the walk from the station, drawn in as the map comes into view */}
+      <motion.path
+        d={`M150 ${top + 8}V${shopY}H162`}
+        className="lane__route"
+        initial={{ pathLength: 0 }}
+        whileInView={{ pathLength: 1 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 2.2, ease: [0.45, 0, 0.2, 1] }}
+      />
+      <motion.circle
+        cx="150"
+        r="6"
+        className="lane__walker"
+        initial={{ cy: top + 8, opacity: 0 }}
+        whileInView={{ cy: shopY, opacity: [0, 1, 1, 0] }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 2.2, ease: [0.45, 0, 0.2, 1] }}
+      />
       {/* the shop, east side of the lane */}
-      <g transform={`translate(162 ${shopY - 13})`}>
+      <motion.g
+        initial={{ scale: 0.4, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ delay: 2.1, type: 'spring', stiffness: 420, damping: 16 }}
+        style={{ x: 162, y: shopY - 13 }}
+      >
         <rect width="26" height="26" className="lane__shop" />
         <text x="13" y="18" textAnchor="middle" className="lane__sz">SZ</text>
-      </g>
+      </motion.g>
       <text x="198" y={shopY - 2} className="lane__label lane__label--strong">No. 119</text>
       <text x="198" y={shopY + 14} className="lane__label">Sam Zenaldeen</text>
       {/* north */}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { scrollToId } from '../lib/contact'
+import { scrollToTop } from '../lib/smooth'
 import { StatusLamp } from './StatusLamp'
 import { Close, Menu } from './Icons'
 import markUrl from '../assets/img/sz-mark.png'
@@ -50,7 +51,7 @@ export function StickyBar() {
             exit={{ y: '-100%' }}
             transition={{ duration: 0.28, ease: [0.2, 0.7, 0.2, 1] }}
           >
-            <button type="button" className="bar__home" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="Back to top">
+            <button type="button" className="bar__home" onClick={() => scrollToTop()} aria-label="Back to top">
               <img src={markUrl} alt="" width={34} height={34} />
             </button>
             <StatusLamp compact />

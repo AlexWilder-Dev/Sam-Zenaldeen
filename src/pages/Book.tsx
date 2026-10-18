@@ -7,10 +7,11 @@ import { gbp } from '../lib/visit'
 import { formatRange, formatTime, longDate, slotsFor, upcomingDays, type DayOption } from '../lib/time'
 import { useLondonNow } from '../lib/useLondonNow'
 import { telHref, waHref } from '../lib/contact'
+import { scrollToTop } from '../lib/smooth'
 import { ServiceRow } from '../components/ServiceRow'
-import { OfferCard } from '../components/VisitTray'
+import { Ticket } from '../components/Ticket'
 import { StatusLamp } from '../components/StatusLamp'
-import { ArrowLeft, Chat, Check, Close, Phone } from '../components/Icons'
+import { ArrowLeft, Chat, Check, Phone } from '../components/Icons'
 import markUrl from '../assets/img/sz-mark.png'
 
 function requestText(opts: { ids: string[]; total: number; hasFrom: boolean; day?: DayOption; time?: number; name?: string; phone?: string }) {
@@ -37,7 +38,7 @@ const reveal = {
 export function Book() {
   const navigate = useNavigate()
   const now = useLondonNow()
-  const { ids, total, hasFrom, offer, take, remove, clear } = useVisit()
+  const { ids, total, hasFrom, clear } = useVisit()
   const days = useMemo(() => upcomingDays(now, 14), [now.ymd])
   const [dayYmd, setDayYmd] = useState<string>()
   const [time, setTime] = useState<number>()
@@ -51,7 +52,7 @@ export function Book() {
   const timesRef = useRef<HTMLDivElement>(null)
   const detailsRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => window.scrollTo(0, 0), [])
+  useEffect(() => scrollToTop(true), [])
 
   const day = days.find((d) => d.ymd === dayYmd)
   const slots = day ? slotsFor(day, now) : []
@@ -73,7 +74,7 @@ export function Book() {
     setTried(true)
     if (!ready || !day || time === undefined) return
     setSent({ ids, total, hasFrom, day, time, name: name.trim(), phone })
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    scrollToTop()
   }
 
   const back = () => navigate('/', { state: { scrollTo: 'prices' } })
@@ -162,33 +163,7 @@ export function Book() {
           <h2 id="step-visit" className="step__title">
             <span>1</span> Your visit
           </h2>
-          {ids.length > 0 && (
-            <ul className="chosen">
-              {ids.map((id) => {
-                const s = serviceById(id)!
-                return (
-                  <li key={id}>
-                    <span>{s.name}</span>
-                    <span className="chosen__price">
-                      {s.from && 'from '}
-                      {gbp(s.price)}
-                    </span>
-                    <button type="button" onClick={() => remove(id)} aria-label={`Remove ${s.name}`}>
-                      <Close size={16} />
-                    </button>
-                  </li>
-                )
-              })}
-              <li className="chosen__total">
-                <span>Total</span>
-                <span>
-                  {hasFrom && 'from '}
-                  {gbp(total)}
-                </span>
-              </li>
-            </ul>
-          )}
-          <AnimatePresence>{offer && <OfferCard key={offer.pkg.id} offer={offer} onTake={() => take(offer)} />}</AnimatePresence>
+          <Ticket />
           {tried && ids.length === 0 && <p className="field__error">Choose at least one service.</p>}
           <button type="button" className="link-gold" aria-expanded={picking} onClick={() => setPicking((p) => !p)}>
             {picking ? 'Done choosing' : ids.length ? 'Add or change services' : 'Choose services'}

@@ -1,4 +1,5 @@
 import { salon } from '../data/salon'
+import { scrollToElement } from './smooth'
 
 export const telHref = `tel:${salon.phone.tel}`
 export const mailHref = `mailto:${salon.email}`
@@ -8,7 +9,5 @@ export const waHref = (text?: string) =>
 
 export function scrollToId(id: string) {
   const el = document.getElementById(id)
-  if (!el) return
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+  if (el) scrollToElement(el)
 }
