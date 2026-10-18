@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sam Zenaldeen Gentlemen's Grooming · 119 Sheen Lane, East Sheen</title>
+    <meta name="description" content="Sam's own luxury barbers on Sheen Lane. Every visit starts with a consultation, so you leave sharp and dapper. Wash Cut &amp; Finish £33, hot towel shaves from £26. Open seven days." />
+    <meta name="theme-color" content="#003426" />
+    <link rel="canonical" href="https://alexwilder-dev.github.io/sam-zenaldeen/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sam Zenaldeen Gentlemen's Grooming" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:title" content="Sam Zenaldeen Gentlemen's Grooming, East Sheen" />
+    <meta property="og:description" content="Sam's luxury barbers at 119 Sheen Lane. Consultation first, traditional hot towel shaves, and you leave sharp and dapper. Open seven days." />
+    <meta property="og:url" content="https://alexwilder-dev.github.io/sam-zenaldeen/" />
+    <meta property="og:image" content="https://alexwilder-dev.github.io/sam-zenaldeen/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The gold SZ sign of Sam Zenaldeen Gentlemen's Grooming above the salon's walnut mirrors, red leather chairs and buttoned bench" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sam Zenaldeen Gentlemen's Grooming, East Sheen" />
+    <meta name="twitter:description" content="Sam's luxury barbers at 119 Sheen Lane. Consultation first, traditional hot towel shaves, and you leave sharp and dapper. Open seven days." />
+    <meta name="twitter:image" content="https://alexwilder-dev.github.io/sam-zenaldeen/og.jpg" />
+    <meta name="twitter:image:alt" content="The gold SZ sign of Sam Zenaldeen Gentlemen's Grooming above the salon's walnut mirrors, red leather chairs and buttoned bench" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="https://alexwilder-dev.github.io/sam-zenaldeen/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="https://alexwilder-dev.github.io/sam-zenaldeen/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="https://alexwilder-dev.github.io/sam-zenaldeen/apple-touch-icon.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "HairSalon",
+        "name": "Sam Zenaldeen Gentlemen's Grooming",
+        "url": "https://alexwilder-dev.github.io/sam-zenaldeen/",
+        "image": "https://alexwilder-dev.github.io/sam-zenaldeen/og.jpg",
+        "telephone": "+44 20 8392 2954",
+        "email": "sam@samzenaldeen.co.uk",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "119 Sheen Lane",
+          "addressLocality": "London",
+          "postalCode": "SW14 8AE",
+          "addressCountry": "GB"
+        },
+        "geo": { "@type": "GeoCoordinates", "latitude": 51.4655267, "longitude": -0.2666719 },
+        "openingHoursSpecification": [
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "19:00" },
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "18:00" },
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "10:00", "closes": "17:00" }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <p>Sam Zenaldeen Gentlemen's Grooming, 119 Sheen Lane, London SW14 8AE. Call 020 8392 2954 or WhatsApp 07969 109848.</p>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+    (() => {
+      try {
+        if (location.hash === '#me') localStorage.setItem('me', '1');
+        if (localStorage.getItem('me') || sessionStorage.getItem('pinged')) return;
+        sessionStorage.setItem('pinged', '1');
+      } catch (e) {}
+      const v = new URLSearchParams(location.search).get('v') || 'untagged';
+      fetch('https://ntfy.sh/YOUR-NTFY-TOPIC', {
+        method: 'POST', body: `${v} opened ${location.pathname}`, keepalive: true
+      }).catch(() => {});
+    })();
+    </script>
+  </body>
+</html>
