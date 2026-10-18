@@ -8,11 +8,11 @@ Live: https://alexwilder-dev.github.io/sam-zenaldeen/
 
 ## What's in it
 
-- **Walk in off Sheen Lane.** The first screen is the shopfront as it stands: brick, the green fascia with the gold SZ mark, the phone number on the left and the web address on the right, both windows lit, and the door. The door's glass shows whether the salon is open right now (London time), what a Wash Cut & Finish costs, and how to book. Scroll and the door swings open, the camera goes through it, and the owner's panorama of the room pans past with captions: the walnut mirrors, the basins, the red leather chairs, Sam, the red bench.
-- **The steamed mirror.** The hot towel shave in the salon's own three steps. Steam fogs a walnut-framed mirror, a cut-throat razor wipes a clean line through it, and facial-massage circles clear it to reveal the price. You can wipe the glass with a finger or the mouse, and it mists over again.
-- **The ticket.** Tap prices and a paper ticket adds up. When the choice matches a package, Father & Son or a five-visit bundle, it offers the switch, and a red "Saved £x" stamp lands on the ticket. Savings are worked out from list prices. Then you pick a day and a time inside opening hours and get a confirmation, with a prefilled WhatsApp message one tap away.
-- The salon's way of working, lit up word by word as you scroll. Packages as paper passes. Sam's story with his portrait in a walnut frame whose lamp switches on. Google reviews with a rolling marquee of what reviewers mention. Hours, and the walk from Mortlake station drawn onto a to-scale sketch of Sheen Lane.
-- Smooth scrolling and a brass cursor on desktop. Everything falls back to a still version when the device asks for reduced motion.
+- **His room, first.** The opening screen is the owner's panorama of the salon. On a phone you swipe it sideways, with native scrolling, to look round, and points on the mirrors, basins, chairs, Sam and the bench name what you're looking at. Under it: whether the salon is open right now (London time), what a Wash Cut & Finish costs, and request / call / WhatsApp.
+- **The ticket.** Tap prices and a paper ticket adds up. When the choice matches a package, Father & Son or a five-visit bundle, it offers the switch and a red "Saved £x" stamp lands on the ticket. Savings are worked out from list prices. Then pick a day and a time inside opening hours and get a confirmation, with a prefilled WhatsApp message one tap away.
+- **The misted mirror.** The hot towel shave in the salon's own three steps, beside a walnut mirror that steams up when it comes into view. A cut-throat razor takes one stroke through the mist to show the price, and you can wipe the glass yourself.
+- Packages as paper passes, Sam's story with his portrait, credited Google reviews, hours, and the walk from Mortlake station drawn onto a to-scale sketch of Sheen Lane.
+- Built to be quick on a phone: no scroll-jacking, no intro, and nothing animating while idle. Motion is reduced when the device asks for it.
 
 ## Where the content lives
 

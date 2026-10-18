@@ -35,7 +35,7 @@ export function Tariff() {
       <div className="wrap">
         <header className="section__head tariff__head">
           <p className="eyebrow">The price list</p>
-          <h2 id="prices-title" className="title title--huge">
+          <h2 id="prices-title" className="title">
             Tap a price.
             <br />
             <em>Build your visit.</em>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, m } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { categories, salon, serviceById, services } from '../data/salon'
 import { useVisit } from '../lib/VisitContext'
@@ -7,7 +7,7 @@ import { gbp } from '../lib/visit'
 import { formatRange, formatTime, longDate, slotsFor, upcomingDays, type DayOption } from '../lib/time'
 import { useLondonNow } from '../lib/useLondonNow'
 import { telHref, waHref } from '../lib/contact'
-import { scrollToTop } from '../lib/smooth'
+import { scrollToTop } from '../lib/contact'
 import { ServiceRow } from '../components/ServiceRow'
 import { Ticket } from '../components/Ticket'
 import { StatusLamp } from '../components/StatusLamp'
@@ -84,12 +84,12 @@ export function Book() {
     const wa = waHref(requestText(sent))
     return (
       <main className="book book--done">
-        <motion.div className="confirm" {...reveal}>
+        <m.div className="confirm" {...reveal}>
           <div className="confirm__seal" aria-hidden>
             <img src={markUrl} alt="" width={72} height={72} />
-            <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.25, type: 'spring', stiffness: 400, damping: 20 }}>
+            <m.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.25, type: 'spring', stiffness: 400, damping: 20 }}>
               <Check size={22} />
-            </motion.span>
+            </m.span>
           </div>
           <p className="eyebrow eyebrow--gold">Request ready</p>
           <h1 className="title title--light">
@@ -138,7 +138,7 @@ export function Book() {
               Back to the site
             </button>
           </div>
-        </motion.div>
+        </m.div>
       </main>
     )
   }
@@ -170,7 +170,7 @@ export function Book() {
           </button>
           <AnimatePresence initial={false}>
             {picking && (
-              <motion.div className="picker" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
+              <m.div className="picker" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
                 {categories.map((c) => (
                   <div key={c.id} className="picker__group">
                     <h3>{c.title}</h3>
@@ -183,7 +183,7 @@ export function Book() {
                     </ul>
                   </div>
                 ))}
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
         </section>
@@ -218,7 +218,7 @@ export function Book() {
 
         <AnimatePresence>
           {day && (
-            <motion.section className="step" aria-labelledby="step-time" ref={timesRef} {...reveal}>
+            <m.section className="step" aria-labelledby="step-time" ref={timesRef} {...reveal}>
               <h2 id="step-time" className="step__title">
                 <span>3</span> Preferred start time
               </h2>
@@ -240,13 +240,13 @@ export function Book() {
                 ))}
               </div>
               {tried && time === undefined && <p className="field__error">Pick a time.</p>}
-            </motion.section>
+            </m.section>
           )}
         </AnimatePresence>
 
         <AnimatePresence>
           {day && time !== undefined && (
-            <motion.section className="step" aria-labelledby="step-you" ref={detailsRef} {...reveal}>
+            <m.section className="step" aria-labelledby="step-you" ref={detailsRef} {...reveal}>
               <h2 id="step-you" className="step__title">
                 <span>4</span> Your details
               </h2>
@@ -272,7 +272,7 @@ export function Book() {
                 </span>
                 <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={3} />
               </label>
-            </motion.section>
+            </m.section>
           )}
         </AnimatePresence>
 

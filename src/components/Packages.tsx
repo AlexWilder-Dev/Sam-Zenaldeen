@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { reviews, serviceById, services } from '../data/salon'
 import { gbp, listPriceOf, savingOf } from '../lib/visit'
 import { useVisit } from '../lib/VisitContext'
@@ -12,7 +12,7 @@ function FiveMarks() {
   return (
     <span className="five" aria-hidden>
       {Array.from({ length: 5 }, (_, i) => (
-        <motion.span
+        <m.span
           key={i}
           initial={{ scale: 0.3, opacity: 0.25 }}
           whileInView={{ scale: 1, opacity: 1 }}
@@ -36,7 +36,7 @@ export function Packages() {
     const on = has(p.id)
     const perVisit = five ? p.price / p.covers![0].count : undefined
     return (
-      <motion.button
+      <m.button
         key={p.id}
         type="button"
         className={`pass${on ? ' is-on' : ''}${five ? ' pass--five' : ''}`}
@@ -61,7 +61,7 @@ export function Packages() {
           {on ? <Check size={18} /> : <Plus size={18} />}
           {on ? 'On your ticket' : 'Add to ticket'}
         </span>
-      </motion.button>
+      </m.button>
     )
   }
 
@@ -69,15 +69,15 @@ export function Packages() {
     <section id="packages" className="section packages" aria-labelledby="packages-title">
       <div className="wrap">
         <header className="section__head">
-          <p className="eyebrow eyebrow--gold">
+          <p className="eyebrow">
             <Crossed size={22} /> Packages
           </p>
-          <h2 id="packages-title" className="title title--huge title--light">
+          <h2 id="packages-title" className="title">
             The complete
             <br />
             <em>experience.</em>
           </h2>
-          <p className="lede lede--light">Every saving below is worked out from the list prices.</p>
+          <p className="lede">Every saving below is worked out from the list prices.</p>
         </header>
 
         <div className="packages__grid">

@@ -5,9 +5,6 @@ import '@fontsource-variable/bodoni-moda/wght-italic.css'
 import '@fontsource-variable/jost'
 import './styles/site.css'
 import App from './App'
-import { startSmooth } from './lib/smooth'
-
-startSmooth()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

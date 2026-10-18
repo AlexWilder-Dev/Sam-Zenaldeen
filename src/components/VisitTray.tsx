@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, m } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useVisit } from '../lib/VisitContext'
 import { gbp, offerLine, type Offer } from '../lib/visit'
@@ -9,7 +9,7 @@ import { Arrow, Close } from './Icons'
 /** Full-width suggestion, used on the booking page */
 export function OfferCard({ offer, onTake }: { offer: Offer; onTake: () => void }) {
   return (
-    <motion.div
+    <m.div
       className="offer"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
@@ -21,7 +21,7 @@ export function OfferCard({ offer, onTake }: { offer: Offer; onTake: () => void 
       <button type="button" className="offer__take" onClick={onTake}>
         {offer.kind === 'bundle' ? 'Make it five' : 'Switch to the package'} · save {gbp(offer.saving)}
       </button>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -49,8 +49,8 @@ export function VisitTray() {
     <>
       <AnimatePresence>
         {open && (
-          <motion.div className="sheet-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)}>
-            <motion.div
+          <m.div className="sheet-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)}>
+            <m.div
               className="ticket-sheet"
               role="dialog"
               aria-label="Your ticket"
@@ -64,14 +64,14 @@ export function VisitTray() {
                 <Close size={20} />
               </button>
               <Ticket onBook={() => navigate('/book')} />
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {n > 0 && !open && (
-          <motion.aside
+          <m.aside
             className="tray"
             aria-label="Your visit"
             initial={{ y: '120%' }}
@@ -81,7 +81,7 @@ export function VisitTray() {
           >
             <AnimatePresence initial={false}>
               {offer && (
-                <motion.div
+                <m.div
                   key={offer.pkg.id}
                   className={`offer offer--strip${offer.kind === 'bundle' ? ' offer--quiet' : ''}`}
                   initial={{ opacity: 0, height: 0 }}
@@ -98,7 +98,7 @@ export function VisitTray() {
                   <button type="button" className="offer__take" onClick={() => take(offer)}>
                     {offer.kind === 'bundle' ? 'Make it five' : 'Switch'}
                   </button>
-                </motion.div>
+                </m.div>
               )}
             </AnimatePresence>
             <div className="tray__bar">
@@ -107,16 +107,16 @@ export function VisitTray() {
                   {n} {n === 1 ? 'service' : 'services'}
                   <small>{saved > 0 ? `Saved ${gbp(saved)} · ticket` : 'See ticket'}</small>
                 </span>
-                <motion.span key={total} className="tray__total" initial={{ y: -6, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+                <m.span key={total} className="tray__total" initial={{ y: -6, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
                   {hasFrom && <small>from </small>}
                   {gbp(total)}
-                </motion.span>
+                </m.span>
               </button>
               <button type="button" className="btn btn--leather tray__go" onClick={() => navigate('/book')}>
                 Choose a time <Arrow size={18} />
               </button>
             </div>
-          </motion.aside>
+          </m.aside>
         )}
       </AnimatePresence>
     </>

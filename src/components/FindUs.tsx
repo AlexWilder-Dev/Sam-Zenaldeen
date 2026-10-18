@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { hours, salon } from '../data/salon'
 import { formatRange } from '../lib/time'
 import { useLondonNow } from '../lib/useLondonNow'
@@ -38,7 +38,7 @@ function LaneMap() {
       <text x="120" y={(top + shopY) / 2 + 40} className="lane__dist" textAnchor="end">{station.metres} m</text>
       <text x="120" y={(shopY + bottom) / 2 + 4} className="lane__dist" textAnchor="end">{junction.metres} m</text>
       {/* the walk from the station, drawn in as the map comes into view */}
-      <motion.path
+      <m.path
         d={`M150 ${top + 8}V${shopY}H162`}
         className="lane__route"
         initial={{ pathLength: 0 }}
@@ -46,7 +46,7 @@ function LaneMap() {
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 2.2, ease: [0.45, 0, 0.2, 1] }}
       />
-      <motion.circle
+      <m.circle
         cx="150"
         r="6"
         className="lane__walker"
@@ -56,7 +56,7 @@ function LaneMap() {
         transition={{ duration: 2.2, ease: [0.45, 0, 0.2, 1] }}
       />
       {/* the shop, east side of the lane */}
-      <motion.g
+      <m.g
         initial={{ scale: 0.4, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 1 }}
         viewport={{ once: true, margin: '-80px' }}
@@ -65,7 +65,7 @@ function LaneMap() {
       >
         <rect width="26" height="26" className="lane__shop" />
         <text x="13" y="18" textAnchor="middle" className="lane__sz">SZ</text>
-      </motion.g>
+      </m.g>
       <text x="198" y={shopY - 2} className="lane__label lane__label--strong">No. 119</text>
       <text x="198" y={shopY + 14} className="lane__label">Sam Zenaldeen</text>
       {/* north */}

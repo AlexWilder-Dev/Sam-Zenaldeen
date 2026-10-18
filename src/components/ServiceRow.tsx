@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useVisit } from '../lib/VisitContext'
 import { Check, Plus } from './Icons'
 import type { Service } from '../data/salon'
@@ -25,14 +25,14 @@ export function ServiceRow({ s, extra }: { s: Service; extra?: string }) {
           {s.from && <small>from </small>}£{s.price}
         </span>
         <span className="row__toggle" aria-hidden>
-          <motion.span
+          <m.span
             key={on ? 'on' : 'off'}
             initial={{ scale: 0.6, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.18 }}
           >
             {on ? <Check size={18} /> : <Plus size={18} />}
-          </motion.span>
+          </m.span>
         </span>
         <span className="visually-hidden">{on ? ', in your visit' : ', add to your visit'}</span>
       </button>

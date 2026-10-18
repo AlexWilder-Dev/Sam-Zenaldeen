@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
+import { AnimatePresence, m, useAnimationControls } from 'framer-motion'
 import { useEffect, useRef } from 'react'
 import { serviceById } from '../data/salon'
 import { useVisit } from '../lib/VisitContext'
@@ -26,7 +26,7 @@ export function Ticket({ onBook, showOffer = true }: { onBook?: () => void; show
   }, [saved, shake])
 
   return (
-    <motion.div className="ticket" animate={shake}>
+    <m.div className="ticket" animate={shake}>
       <div className="ticket__head">
         <span className="ticket__sz">SZ</span>
         <span>Your visit</span>
@@ -41,9 +41,9 @@ export function Ticket({ onBook, showOffer = true }: { onBook?: () => void; show
             {ids.map((id) => {
               const s = serviceById(id)!
               return (
-                <motion.li
+                <m.li
                   key={id}
-                  layout
+
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10, height: 0 }}
@@ -57,7 +57,7 @@ export function Ticket({ onBook, showOffer = true }: { onBook?: () => void; show
                   <button type="button" onClick={() => remove(id)} aria-label={`Remove ${s.name}`}>
                     <Close size={14} />
                   </button>
-                </motion.li>
+                </m.li>
               )
             })}
           </AnimatePresence>
@@ -66,13 +66,13 @@ export function Ticket({ onBook, showOffer = true }: { onBook?: () => void; show
 
       <div className="ticket__total">
         <span>Total</span>
-        <motion.strong key={total} initial={{ y: -8, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+        <m.strong key={total} initial={{ y: -8, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
           {hasFrom && <small>from </small>}
           {gbp(total)}
-        </motion.strong>
+        </m.strong>
         <AnimatePresence>
           {saved > 0 && (
-            <motion.div
+            <m.div
               key={saved}
               className="stamp"
               initial={{ scale: 2.4, opacity: 0, rotate: -24 }}
@@ -83,14 +83,14 @@ export function Ticket({ onBook, showOffer = true }: { onBook?: () => void; show
             >
               <span>Saved</span>
               <strong>{gbp(saved)}</strong>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>
 
       <AnimatePresence>
         {showOffer && offer && (
-          <motion.div
+          <m.div
             key={offer.pkg.id}
             className="ticket__offer"
             initial={{ opacity: 0, height: 0 }}
@@ -101,7 +101,7 @@ export function Ticket({ onBook, showOffer = true }: { onBook?: () => void; show
             <button type="button" onClick={() => take(offer)}>
               {offer.kind === 'bundle' ? 'Make it five' : 'Switch'} · save {gbp(offer.saving)}
             </button>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -110,6 +110,6 @@ export function Ticket({ onBook, showOffer = true }: { onBook?: () => void; show
           Choose a time <Arrow size={18} />
         </button>
       )}
-    </motion.div>
+    </m.div>
   )
 }

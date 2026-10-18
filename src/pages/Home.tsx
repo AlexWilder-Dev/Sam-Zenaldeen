@@ -1,18 +1,15 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Entrance } from '../components/Entrance'
-import { Manifesto } from '../components/Manifesto'
+import { Header } from '../components/Header'
+import { Hero } from '../components/Hero'
 import { Tariff } from '../components/Tariff'
-import { SteamMirror } from '../components/SteamMirror'
+import { ShaveMirror } from '../components/ShaveMirror'
 import { Packages } from '../components/Packages'
 import { SamStory } from '../components/SamStory'
 import { Reviews } from '../components/Reviews'
 import { FindUs } from '../components/FindUs'
 import { Footer } from '../components/Footer'
-import { StickyBar } from '../components/StickyBar'
 import { VisitTray } from '../components/VisitTray'
-import { Intro } from '../components/Intro'
-import { Cursor } from '../components/Cursor'
 import { scrollToId } from '../lib/contact'
 
 export function Home() {
@@ -25,14 +22,11 @@ export function Home() {
 
   return (
     <>
-      <Intro />
-      <Cursor />
-      <StickyBar />
+      <Header />
       <main>
-        <Entrance />
-        <Manifesto />
+        <Hero />
         <Tariff />
-        <SteamMirror />
+        <ShaveMirror />
         <Packages />
         <SamStory />
         <Reviews />
